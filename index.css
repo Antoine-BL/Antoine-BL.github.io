@@ -1,7 +1,10 @@
 BODY {
+    position: absolute;
     margin: 0px;
     overflow: hidden;
-    font-family: "Roboto";    
+    font-family: "Roboto";
+    width: 100%;
+    height: 100%;
 }
 
 H1 {
@@ -56,21 +59,26 @@ H2 {
 
 .bottomSection {
     position: absolute;
-    background-color: #FFFFDD;
     width: 100%;
     height: 20%;
     bottom: 0px;
+
+    color: #202020;
+    background-color: #FFFFDD;
 }
 
 .threeDots {
     position: absolute;
     margin: auto;
-    bottom: 7.5%;
+    bottom: 10%;
     right: 0;
     left: 0;
 
-    width: 30px;
-    height: 10px;
+    width: 250px;
+
+    text-align: center;
+
+    font-size: 9pt;
 }
 
 .size {

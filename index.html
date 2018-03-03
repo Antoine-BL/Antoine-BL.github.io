@@ -3,29 +3,27 @@
 
 <head>
   <title>Antoine's ePortfolio (WIP)</title>
+  <script src="index.js"></script>
   <link rel="stylesheet" type="text/css" href="index.css"></link>
   <link href="https://fonts.googleapis.com/css?family=Roboto:100, 400" rel="stylesheet">
 </head>
 
-<body>
+<body id="body">
     <div class="topSection">
-        <div class="mainParagraph" >
+        <div class="mainParagraph" onscroll="scroll()">
                 <h1 class="header">Antoine Brassard Lahey</h1>
                 <h2 class="tagLine">Software Developer.</h2>
         </div>
         <div >
             <table class="menus">
                 <tr>
-                    <td>
+                    <td id="tdSect1">
                         Section 1 
                     </td>
-                    <td>
+                    <td id="tdSect2">
                         Section 2
                     </td>
-                    <td>
-                        Section 3
-                    </td>
-                    <td>
+                    <td id="tdDLResume">
                        Download Resume 
                     </td>
                 </tr>
@@ -34,6 +32,7 @@
     </div>  
     <div class="bottomSection">
         <div class="threeDots">
+            (Scroll or drag up for next page)<br/>
         <img class="size" src="threeDots.png" />
         </div>
     </div>
