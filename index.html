@@ -5,10 +5,10 @@
   <title>Antoine's ePortfolio (WIP)</title>
   <script src="index.js"></script>
   <link rel="stylesheet" type="text/css" href="index.css"></link>
-  <link href="https://fonts.googleapis.com/css?family=Roboto:100, 400" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,200,300 400" rel="stylesheet">
 </head>
 
-<body id="body">
+<body>
     <div class="menus">
         <table>
             <tr>
@@ -24,20 +24,20 @@
             </tr>
         </table>
     </div>
-    <div id="divMainContent">
+    <div id="divMainContent" class="mainContent">
         <div  class="topSection">
-                <div class="mainParagraph" onscroll="scroll()">
-                        <h1 class="header">Antoine Brassard Lahey</h1>
-                        <h2 class="tagLine">Software Developer.</h2>
-                </div>
-                
-            </div>  
-            <div class="bottomSection">
-                <div class="threeDots">
-                    (Scroll or drag up for next page)<br/>
-                <img class="size" src="threeDots.png" />
-                </div>
+            <div class="mainParagraph" onscroll="scroll()">
+                    <h1 class="header">Antoine Brassard Lahey</h1>
+                    <h2 class="tagLine">Software Developer.</h2>
             </div>
+        </div>  
+        <div class="bottomSection">
+            
+        </div>
+    </div>
+    <div class="threeDots">
+        <span id="scrollHint">(Scroll or drag up for next page)</span><br/>
+        <img class="size" src="threeDots.png" />
     </div>
 </body>
 

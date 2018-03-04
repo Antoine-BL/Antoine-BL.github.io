@@ -41,9 +41,24 @@ var events = new function () {
 var pageTransitions = new function () {
     this.currentPageState = 0;
     this.pages = [
-        'index.html',
-        'about.html',
-        'projects.html'
+        {
+            url:'index.html',
+            update: function () {
+
+            }
+        },
+        {
+            url:'about.html',
+            update: function () {
+
+            }
+        },
+        {
+            url:'projects.html',
+            update: function () {
+
+            }
+        }
     ];
     this.loadedPages = [];
 
@@ -52,20 +67,13 @@ var pageTransitions = new function () {
      * @param {boolean} forward whether to move forward or backward a page
      */
     this.transitionToNextPage = async function (forward) {
-        if (forward) {
-            pageTransitions.currentPageState++;
-            pageTransitions.lastPage = document.querySelector('body');
-        } else {
-            pageTransitions.currentPageState--;
-            pageTransitions.nextPage = document.querySelector('body');
-        }
+        pageTransitions.currentPageState += forward ? 1 : -1;
 
         if (pageTransitions.currentPageState < 0 || pageTransitions.currentPageState >= pageTransitions.pages.length){
-            pageTransitions.currentPageState < 0 ?
-                0 : (pageTransitions.currentPageState >= pageTransitions.pages.length ?
-                    pageTransitions.pages.length - 1 : pageTransitions.currentPageState);
+            pageTransitions.currentPageState < 0 ? 0 : (pageTransitions.currentPageState >= pageTransitions.pages.length ?
+                                                        pageTransitions.pages.length - 1 : pageTransitions.currentPageState);
         } else {
-            document.getElementById('divMainContent').innerHTML = await pageTransitions.loadedPages[pageTransitions.currentPageState];
+            document.getElementById('divMainContent').outerHTML = (await pageTransitions.loadedPages[pageTransitions.currentPageState]).outerHTML;
         }
     }
 
@@ -77,7 +85,7 @@ var pageTransitions = new function () {
         pageTransitions.nextPage = null;
         pageTransitions.lastPage = null;
         pageTransitions.currentPageState = pageNum;
-        document.querySelector('body').innerHTML = await pageTransitions.loadedPages[pageTransitions.currentPageState];
+        document.getElementById('divMainContent').outerHTML = (await pageTransitions.loadedPages[pageTransitions.currentPageState]).outerHTML;
     }
 
     /**
@@ -85,7 +93,7 @@ var pageTransitions = new function () {
      */
     this.preloadPages = function() {
         for (var i = 0; i < pageTransitions.pages.length; i++) {
-            pageTransitions.loadedPages[i] = getPage(pageTransitions.pages[i])
+            pageTransitions.loadedPages[i] = getPage(pageTransitions.pages[i].url, 'divMainContent')
             .then(function OK (response) {return response})
             .catch(function ERR(err) { console.error(err); });
         }
@@ -94,17 +102,17 @@ var pageTransitions = new function () {
     /**
      * Returns a DOMString containing a part of another HTML page using selectors
      * @param {String} pageURL targeted page or resource to load from
-     * @param {String} loadedSel selector to load in targeted page
+     * @param {String} loadedID selector to load in targeted page
      * @return {DOMString}
      */
-    async function getPage(pageURL, loadedSel = 'body') {
+    async function getPage(pageURL, loadedID = 'body') {
         return new Promise(function(resolve, reject){       
             var req = new XMLHttpRequest;
             req.responseType = 'document';
             req.open('GET', pageURL, true);        
             req.onload = function(){
                 if (this.status >= 200 && this.status < 300){
-                    resolve(req.response.querySelector(loadedSel).innerHTML);
+                    resolve(req.response.getElementById(loadedID));
                 } else {
                     reject({
                         status: this.status,
@@ -123,11 +131,11 @@ var pageTransitions = new function () {
     }
 }
 
-
 /**
  * Binds events to listeners
  */
 window.onload =  function() {
+    alert('Warning: this website has not yet been completed.\n\n any text present is simply a placeholder');
     window.addEventListener('wheel', events.scroll);
     pageTransitions.preloadPages();
     document.getElementById('tdAbout').addEventListener('click', () => pageTransitions.setPageWithTransition(1));
