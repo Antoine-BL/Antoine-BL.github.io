@@ -1,18 +1,25 @@
 BODY {
+    position: absolute;
     margin: 0px;
     overflow: hidden;
-    font-family: "Roboto";    
+    font-family: "Roboto";
+    width: 100%;
+    height: 100%;
 }
 
 H1 {
     font-size: 36pt;
     font-weight: 200;
-
 }
 
 H2 {
     font-size: 36pt;
     font-weight: bolder;
+}
+
+H3 {
+    font-size: 24pt;
+    font-weight: 200;
 }
 
 .bgImage {
@@ -24,8 +31,7 @@ H2 {
 .mainParagraph {
     position: absolute;
     margin: auto;
-    top: 0;
-    bottom: 0;
+    bottom: 40%;
     left: 0;
     right: 25%;
 
@@ -56,21 +62,26 @@ H2 {
 
 .bottomSection {
     position: absolute;
-    background-color: #FFFFDD;
     width: 100%;
     height: 20%;
     bottom: 0px;
+
+    color: #202020;
+    background-color: #FFFFDD;
 }
 
 .threeDots {
     position: absolute;
     margin: auto;
-    bottom: 7.5%;
+    bottom: 2%;
     right: 0;
     left: 0;
 
-    width: 30px;
-    height: 10px;
+    width: 250px;
+
+    text-align: center;
+
+    font-size: 9pt;
 }
 
 .size {
@@ -79,21 +90,154 @@ H2 {
 }
 
 .menus{
-    position: absolute;
-    width: 35%;
-    height: 10%;
+    color: #FFFFDD;
+    background-color: #202020;
+    
     right: 0px;
     text-align: right;
     font-weight: 200;
     padding: 20px;
 }
 
-.menus tr{
-    width: 100%;
-    height: 100%;
+.menus table{
+    margin-left: auto;
 }
 
 .menus tr td{
+    padding-right: 20px;
     text-align: center;
     vertical-align: middle;
+}
+
+.about-BG {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #FFFFDD;
+    color: #202020;
+}
+
+.about-mainPar {
+    padding: 0px !important;
+    position: absolute;
+    margin: auto;
+    top: 0px;
+    left: 0;
+    right: 0;
+
+    width: 50%;
+    height: 90%;
+    padding: 20px;
+    text-align: center;
+}
+
+.about-image{
+    width: 25%;
+    height: auto;
+    border-radius: 50%;
+    border: 5px solid #202020;
+}
+
+.about-tagLine{
+    margin: auto;
+    display: block;
+    border-top: 2px double #202020;
+    border-bottom: 2px double #202020;
+    width: 100%;
+}
+
+.content {
+    text-align: justify;
+}
+
+.projects {
+    background-color: #FFFFDD;
+    height: 100%;
+    width: 100%;
+}
+
+.slide {
+    position: absolute;
+    margin: auto;
+    top: 5%;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    color: #FFFFDD;
+
+    height: 75%;
+    width: 75%;
+    background-color: #202020;
+    border-radius: 5px;
+}
+
+.slide H1 {
+    text-align: center;
+    font-size: 36pt;
+    font-weight: 300;
+}
+
+.slide H2 {
+    text-align: center;
+    font-size: 18pt;
+    font-weight: 200;
+}
+
+.slide P {
+    text-align: justify;
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+.slide table {
+    position: absolute;
+    margin: auto;
+    width: 100%;
+    bottom: 50px;
+}
+
+.slide table tr {
+    width: 100%;
+}
+
+.slide table tr td {
+    text-align: center;
+}
+
+.slide button,
+.slide button:focus,
+.slide button:active{
+    border: 3px solid black;
+    border-radius: 50px;
+
+    background-color: #FFFFDD;
+    color: #202020;
+    outline:none;
+
+    padding: 25px;
+    font-family: "Roboto";
+    font-weight: bolder;
+}
+
+
+.rightArrow {
+    width: 5%;
+    height: 10%;
+
+    position: absolute;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    right: 10px;
+}
+
+.leftArrow {
+    width: 5%;
+    height: 10%;
+
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 10px;
+    bottom: 0;
 }

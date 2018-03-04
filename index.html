@@ -3,39 +3,41 @@
 
 <head>
   <title>Antoine's ePortfolio (WIP)</title>
+  <script src="index.js"></script>
   <link rel="stylesheet" type="text/css" href="index.css"></link>
-  <link href="https://fonts.googleapis.com/css?family=Roboto:100, 400" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,200,300 400" rel="stylesheet">
 </head>
 
 <body>
-    <div class="topSection">
-        <div class="mainParagraph" >
-                <h1 class="header">Antoine Brassard Lahey</h1>
-                <h2 class="tagLine">Software Developer.</h2>
+    <div class="menus">
+        <table>
+            <tr>
+                <td id="tdAbout">
+                    About Me
+                </td>
+                <td id="tdProjects">
+                    Projects
+                </td>
+                <td id="tdDLResume">
+                    Download Resume 
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="divMainContent" class="mainContent">
+        <div  class="topSection">
+            <div class="mainParagraph" onscroll="scroll()">
+                    <h1 class="header">Antoine Brassard Lahey</h1>
+                    <h2 class="tagLine">Software Developer.</h2>
+            </div>
+        </div>  
+        <div class="bottomSection">
+            
         </div>
-        <div >
-            <table class="menus">
-                <tr>
-                    <td>
-                        Section 1 
-                    </td>
-                    <td>
-                        Section 2
-                    </td>
-                    <td>
-                        Section 3
-                    </td>
-                    <td>
-                       Download Resume 
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>  
-    <div class="bottomSection">
-        <div class="threeDots">
+    </div>
+    <div class="threeDots">
+        <span id="scrollHint">(Scroll or drag up for next page)</span><br/>
         <img class="size" src="threeDots.png" />
-        </div>
     </div>
 </body>
 
