@@ -109,6 +109,21 @@ H3 {
     vertical-align: middle;
 }
 
+
+.menus button,
+.menus button:focus,
+.menus button:active{
+    background-color: #202020;
+    color: #FFFFDD;
+    outline:none;
+    border:none;
+
+    padding: 5px;
+    font-family: "Roboto";
+    font-size: 10pt;
+    font-weight: bolder;
+}
+
 .about-BG {
     position: absolute;
     width: 100%;
@@ -125,14 +140,15 @@ H3 {
     left: 0;
     right: 0;
 
-    width: 50%;
-    height: 90%;
+    overflow: hidden;
+    width: 75vw;
+    height: 80vh;
     padding: 20px;
     text-align: center;
 }
 
 .about-image{
-    width: 25%;
+    width: 25vmin;
     height: auto;
     border-radius: 50%;
     border: 5px solid #202020;
@@ -144,10 +160,13 @@ H3 {
     border-top: 2px double #202020;
     border-bottom: 2px double #202020;
     width: 100%;
+
+    font-size: 6vmin;
 }
 
 .content {
     text-align: justify;
+    font-size: 2.5vmin;
 }
 
 .projects {
@@ -171,42 +190,57 @@ H3 {
     border-radius: 5px;
 }
 
+.slide > div {
+    height: 30vh;
+    overflow: hidden;
+}
+
 .slide H1 {
     text-align: center;
-    font-size: 36pt;
+    font-size: 7.5vmin;
     font-weight: 300;
+    margin: 3vmin;
+    height: 7.5vmin;
 }
 
 .slide H2 {
+    height: 5vmin;
+    font-size: 4vmin;
+    overflow: hidden;
     text-align: center;
-    font-size: 18pt;
     font-weight: 200;
+    margin: 3vmin;
 }
 
-.slide P {
+.slide div {
+    height: 35vmin;
+    margin-bottom: 2vh;
+}
+
+.slide div P {
+    font-size: 2.5vmin;
+    margin-right: 10vmin;
+    margin-left: 10vmin;
     text-align: justify;
-    padding-left: 10%;
-    padding-right: 10%;
 }
 
-.slide table {
-    position: absolute;
-    margin: auto;
-    width: 100%;
-    bottom: 50px;
-}
-
-.slide table tr {
-    width: 100%;
-}
-
-.slide table tr td {
+.buttons {
     text-align: center;
 }
 
-.slide button,
-.slide button:focus,
-.slide button:active{
+.buttons table {
+    display: inline;
+}
+
+
+.buttons table tr td {
+    width: 50%;
+    align-content: center;
+}
+
+.buttons button,
+.buttons button:focus,
+.buttons button:active{
     border: 3px solid black;
     border-radius: 50px;
 
@@ -214,15 +248,16 @@ H3 {
     color: #202020;
     outline:none;
 
-    padding: 25px;
+    padding: 3vmin;
     font-family: "Roboto";
+    font-size: 2.25vmin;
     font-weight: bolder;
 }
 
 
 .rightArrow {
-    width: 5%;
-    height: 10%;
+    width: 2.5vmin;
+    height: 5vmin;
 
     position: absolute;
     margin: auto;
@@ -232,8 +267,8 @@ H3 {
 }
 
 .leftArrow {
-    width: 5%;
-    height: 10%;
+    width: 2.5vmin;
+    height: 5vmin;
 
     position: absolute;
     margin: auto;
