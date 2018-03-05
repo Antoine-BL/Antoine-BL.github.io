@@ -73,7 +73,8 @@ var pageTransitions = new function () {
             pageTransitions.currentPageState < 0 ? 0 : (pageTransitions.currentPageState >= pageTransitions.pages.length ?
                                                         pageTransitions.pages.length - 1 : pageTransitions.currentPageState);
         } else {
-            document.getElementById('divMainContent').outerHTML = (await pageTransitions.loadedPages[pageTransitions.currentPageState]).outerHTML;
+            document.getElementById('divMainContent').outerHTML = (await pageTransitions.loadedPages[pageTransitions.currentPageState])[0].outerHTML;
+            document.getElementById('divTitle').outerHTML = (await pageTransitions.loadedPages[pageTransitions.currentPageState])[1].outerHTML
         }
     }
 
@@ -85,7 +86,8 @@ var pageTransitions = new function () {
         pageTransitions.nextPage = null;
         pageTransitions.lastPage = null;
         pageTransitions.currentPageState = pageNum;
-        document.getElementById('divMainContent').outerHTML = (await pageTransitions.loadedPages[pageTransitions.currentPageState]).outerHTML;
+        document.getElementById('divMainContent').outerHTML = (await pageTransitions.loadedPages[pageTransitions.currentPageState])[0].outerHTML;
+        document.getElementById('divTitle').outerHTML = (await pageTransitions.loadedPages[pageTransitions.currentPageState])[1].outerHTML
     }
 
     /**
@@ -93,7 +95,7 @@ var pageTransitions = new function () {
      */
     this.preloadPages = function() {
         for (var i = 0; i < pageTransitions.pages.length; i++) {
-            pageTransitions.loadedPages[i] = getPage(pageTransitions.pages[i].url, 'divMainContent')
+            pageTransitions.loadedPages[i] = getPage(pageTransitions.pages[i].url, ['divMainContent', 'divTitle'])
             .then(function OK (response) {return response})
             .catch(function ERR(err) { console.error(err); });
         }
@@ -102,17 +104,22 @@ var pageTransitions = new function () {
     /**
      * Returns a DOMString containing a part of another HTML page using selectors
      * @param {String} pageURL targeted page or resource to load from
-     * @param {String} loadedID selector to load in targeted page
-     * @return {DOMString}
+     * @param {String[] | String} loadedIDs selector(s) to load in targeted page
+     * @return {DOMString[]}
      */
-    async function getPage(pageURL, loadedID = 'body') {
-        return new Promise(function(resolve, reject){       
+    async function getPage(pageURL, loadedIDs) {
+        loadedIDs = Array.isArray(loadedIDs) ? loadedIDs : [loadedIDs];
+        return new Promise(function(resolve, reject){            
             var req = new XMLHttpRequest;
             req.responseType = 'document';
             req.open('GET', pageURL, true);        
             req.onload = function(){
                 if (this.status >= 200 && this.status < 300){
-                    resolve(req.response.getElementById(loadedID));
+                    var tags = [];
+                    loadedIDs.forEach(id => {
+                        tags.push(req.response.getElementById(id));
+                    })
+                    resolve(tags);
                 } else {
                     reject({
                         status: this.status,
