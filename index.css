@@ -194,10 +194,6 @@ H2 {
     border-radius: 5px;
 }
 
-.slide > div {
-    height: 30vh;
-    overflow: hidden;
-}
 
 .slide H1 {
     text-align: center;
@@ -216,13 +212,16 @@ H2 {
     margin: 3vmin;
 }
 
-.slide div {
+.slide div div {
+    overflow: hidden;
     height: 35vmin;
     margin-bottom: 2vh;
 }
 
 .slide div P {
-    font-size: 2.5vmin;
+    font-size: 2.25vmin;
+    margin-top: 0px;
+    margin-bottom: 30px;
     margin-right: 10vmin;
     margin-left: 10vmin;
     text-align: justify;

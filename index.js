@@ -43,20 +43,17 @@ var pageTransitions = new function () {
     this.pages = [
         {
             url:'index.html',
-            update: function () {
-
-            }
+            update: function () {}
         },
         {
             url:'about.html',
-            update: function () {
-
-            }
+            update: function () {}
         },
         {
             url:'projects.html',
             update: function () {
-
+                projectSlides.currentSlide = 0;
+                projectSlides.makeTransition();
             }
         }
     ];
@@ -74,7 +71,8 @@ var pageTransitions = new function () {
                                                         pageTransitions.pages.length - 1 : pageTransitions.currentPageState);
         } else {
             document.getElementById('divMainContent').outerHTML = (await pageTransitions.loadedPages[pageTransitions.currentPageState])[0].outerHTML;
-            document.getElementById('divTitle').outerHTML = (await pageTransitions.loadedPages[pageTransitions.currentPageState])[1].outerHTML
+            document.getElementById('divTitle').outerHTML = (await pageTransitions.loadedPages[pageTransitions.currentPageState])[1].outerHTML;
+            pageTransitions.pages[pageTransitions.currentPageState].update();
         }
     }
 
@@ -83,8 +81,6 @@ var pageTransitions = new function () {
      * @param {number} pageNum zero-based index of the page to transition to
      */
     this.setPageWithTransition = async function (pageNum) {
-        pageTransitions.nextPage = null;
-        pageTransitions.lastPage = null;
         pageTransitions.currentPageState = pageNum;
         document.getElementById('divMainContent').outerHTML = (await pageTransitions.loadedPages[pageTransitions.currentPageState])[0].outerHTML;
         document.getElementById('divTitle').outerHTML = (await pageTransitions.loadedPages[pageTransitions.currentPageState])[1].outerHTML
@@ -95,19 +91,19 @@ var pageTransitions = new function () {
      */
     this.preloadPages = function() {
         for (var i = 0; i < pageTransitions.pages.length; i++) {
-            pageTransitions.loadedPages[i] = getPage(pageTransitions.pages[i].url, ['divMainContent', 'divTitle'])
+            pageTransitions.loadedPages[i] = pageTransitions.getPage(pageTransitions.pages[i].url, ['divMainContent', 'divTitle'])
             .then(function OK (response) {return response})
             .catch(function ERR(err) { console.error(err); });
         }
     }
-
+    
     /**
-     * Returns a DOMString containing a part of another HTML page using selectors
+     * Returns an Element containing a part of another HTML page using selectors
      * @param {String} pageURL targeted page or resource to load from
      * @param {String[] | String} loadedIDs selector(s) to load in targeted page
-     * @return {DOMString[]}
+     * @return {Element[]}
      */
-    async function getPage(pageURL, loadedIDs) {
+    this.getPage = async function (pageURL, loadedIDs) {
         loadedIDs = Array.isArray(loadedIDs) ? loadedIDs : [loadedIDs];
         return new Promise(function(resolve, reject){            
             var req = new XMLHttpRequest;
@@ -138,6 +134,67 @@ var pageTransitions = new function () {
     }
 }
 
+var projectSlides = new function() {
+    this.currentSlide = 0;
+    this.slides = []
+
+    /**
+     * Pre-fetches project slides
+     */
+    this.preloadProjects = async function(){
+        var slidesPage = (await pageTransitions.getPage('slides.html', ['divMainContent']))[0];
+        for (var i = 0; i < slidesPage.children.length; i++) {
+            projectSlides.slides.push(slidesPage.children.item(i));
+        }
+    }
+
+    this.nextProject = async function(forward) {
+        projectSlides.currentSlide += forward ? 1 : -1;
+
+        if (projectSlides.currentSlide < 0 || projectSlides.currentSlide >= projectSlides.slides.length) {
+            projectSlides.currentSlide < 0 ? 0 : (projectSlides.currentSlide >= projectSlides.slides.length ?
+                                                        projectSlides.slides.length - 1 : projectSlides.currentSlide);
+        } else {
+            projectSlides.makeTransition();
+        }
+    }
+
+    this.makeTransition = async function() {
+        var repo = (await projectSlides.slides[projectSlides.currentSlide]).children.item(1).innerText;
+        var repoURL = 'https://github.com/Antoine-BL/' + repo;
+        var siteURL = 'https://Antoine-BL.github.io/' + (repo == 'Antoine-BL.github.io' ? '' : repo);
+        document.getElementById('btnViewRepo').onclick = null;
+        document.getElementById('btnViewRepo').onclick = () => window.open(repoURL);
+        document.getElementById('btnViewSite').onclick = null;
+        document.getElementById('btnViewSite').onclick = () => window.open(siteURL);
+    
+        document.getElementById('divSlideText').innerHTML = (await projectSlides.slides[projectSlides.currentSlide]).children.item(0).innerHTML;
+
+        console.log(projectSlides.currentSlide);
+        if (projectSlides.currentSlide > 0) {
+            document.getElementById('divLeft').innerHTML = '<img id="imgLeft" src="left.png" class="leftArrow">';
+            document.getElementById('imgLeft').onclick = () => projectSlides.nextProject(false);
+        } else {
+            document.getElementById('divLeft').innerHTML = '';
+        }
+        if (projectSlides.currentSlide < projectSlides.slides.length - 1) {
+            console.log('addingRightArrow');
+            document.getElementById('divRight').innerHTML = '<img id="imgRight" src="right.png" class="rightArrow">';
+            document.getElementById('imgRight').addEventListener('click', () => projectSlides.nextProject(true));
+        } else {
+            document.getElementById('divRight').innerHTML = '';
+        }
+    }
+
+    this.viewRepoHandler = function() {
+        
+    }
+
+    this.viewSiteHandler = function() {
+        window.open(siteURL)
+    }
+}
+
 /**
  * Binds events to listeners
  */
@@ -145,6 +202,7 @@ window.onload =  function() {
     alert('Warning: this website has not yet been completed.\n\n any text present is simply a placeholder');
     window.addEventListener('wheel', events.scroll);
     pageTransitions.preloadPages();
+    projectSlides.preloadProjects();
     document.getElementById('tdAbout').addEventListener('click', () => pageTransitions.setPageWithTransition(1));
     document.getElementById('tdProjects').addEventListener('click', () => pageTransitions.setPageWithTransition(2));
     document.getElementById('tdDLResume').addEventListener('click', () => alert('this Feature has not yet been implemented'));
