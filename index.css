@@ -17,6 +17,21 @@ H2 {
     font-weight: bolder;
 }
 
+.title{
+    position: absolute;
+    color: #FFFFDD;
+    text-align: center;
+    font-family: 'Roboto';
+    width: 100%;
+    height: auto;
+
+    font-size: 1.5vmax;
+    margin: auto;
+    top: 2vh;
+    right: 0;
+    left: 0;
+}
+
 .mainParagraph {
     position: absolute;
     margin: auto;
@@ -86,7 +101,7 @@ H2 {
     right: 0px;
     text-align: right;
     font-weight: 200;
-    padding: 20px;
+    padding: 2vh;
 }
 
 .menus table{
@@ -94,7 +109,7 @@ H2 {
 }
 
 .menus tr td{
-    padding-right: 20px;
+    padding-right: 2vw;
     text-align: center;
     vertical-align: middle;
 }
