@@ -86,12 +86,12 @@ H2 {
 
     text-align: center;
 
-    font-size: 9pt;
+    font-size: 2vh;
 }
 
 .size {
-    width: 31px;
-    height: 9px;
+    width: auto;
+    height: 1vh;
 }
 
 .menus{
@@ -136,7 +136,7 @@ H2 {
     color: #202020;
 }
 
-.about-mainPar {
+.about {
     padding: 0px !important;
     position: absolute;
     margin: auto;
@@ -148,17 +148,21 @@ H2 {
     width: 75vw;
     height: 80vh;
     padding: 20px;
+}
+
+.about p {
     text-align: center;
 }
 
-.about-image{
+.about p img{
     width: 25vmin;
     height: auto;
     border-radius: 50%;
     border: 5px solid #202020;
 }
 
-.about-tagLine{
+.about h3{
+    text-align: center;
     margin: auto;
     display: block;
     border-top: 2px double #202020;
@@ -168,7 +172,7 @@ H2 {
     font-size: 6vmin;
 }
 
-.content {
+.about div p {
     text-align: justify;
     font-size: 2.5vmin;
 }

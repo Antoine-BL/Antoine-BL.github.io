@@ -70,9 +70,7 @@ var pageTransitions = new function () {
             pageTransitions.currentPageState < 0 ? 0 : (pageTransitions.currentPageState >= pageTransitions.pages.length ?
                                                         pageTransitions.pages.length - 1 : pageTransitions.currentPageState);
         } else {
-            document.getElementById('divMainContent').outerHTML = (await pageTransitions.loadedPages[pageTransitions.currentPageState])[0].outerHTML;
-            document.getElementById('divTitle').outerHTML = (await pageTransitions.loadedPages[pageTransitions.currentPageState])[1].outerHTML;
-            pageTransitions.pages[pageTransitions.currentPageState].update();
+            pageTransitions.makeTransition();
         }
     }
 
@@ -80,10 +78,10 @@ var pageTransitions = new function () {
      * Transition to a specific page
      * @param {number} pageNum zero-based index of the page to transition to
      */
-    this.setPageWithTransition = async function (pageNum) {
-        pageTransitions.currentPageState = pageNum;
+    this.makeTransition = async function () {
         document.getElementById('divMainContent').outerHTML = (await pageTransitions.loadedPages[pageTransitions.currentPageState])[0].outerHTML;
-        document.getElementById('divTitle').outerHTML = (await pageTransitions.loadedPages[pageTransitions.currentPageState])[1].outerHTML
+        document.getElementById('divTitle').outerHTML = (await pageTransitions.loadedPages[pageTransitions.currentPageState])[1].outerHTML;
+        pageTransitions.pages[pageTransitions.currentPageState].update();
     }
 
     /**
@@ -92,7 +90,7 @@ var pageTransitions = new function () {
     this.preloadPages = function() {
         for (var i = 0; i < pageTransitions.pages.length; i++) {
             pageTransitions.loadedPages[i] = pageTransitions.getPage(pageTransitions.pages[i].url, ['divMainContent', 'divTitle'])
-            .then(function OK (response) {return response})
+            .then(function OK(response) {return response})
             .catch(function ERR(err) { console.error(err); });
         }
     }
@@ -170,7 +168,6 @@ var projectSlides = new function() {
     
         document.getElementById('divSlideText').innerHTML = (await projectSlides.slides[projectSlides.currentSlide]).children.item(0).innerHTML;
 
-        console.log(projectSlides.currentSlide);
         if (projectSlides.currentSlide > 0) {
             document.getElementById('divLeft').innerHTML = '<img id="imgLeft" src="left.png" class="leftArrow">';
             document.getElementById('imgLeft').onclick = () => projectSlides.nextProject(false);
@@ -185,25 +182,34 @@ var projectSlides = new function() {
             document.getElementById('divRight').innerHTML = '';
         }
     }
+}
 
-    this.viewRepoHandler = function() {
-        
-    }
-
-    this.viewSiteHandler = function() {
-        window.open(siteURL)
-    }
+async function preloadImages() {
+    var me = new Image();  
+    me.src = 'me.png';
+    var right = new Image();
+    right.src= 'right.png';
+    var left = new Image();
+    left.src = 'left.png';
 }
 
 /**
  * Binds events to listeners
  */
 window.onload =  function() {
-    alert('Warning: this website has not yet been completed.\n\n any text present is simply a placeholder');
+    alert('Warning: this website has not yet been completed.\n\n All text and functionality is subject to change and should, in no way, be considered final.');
     window.addEventListener('wheel', events.scroll);
     pageTransitions.preloadPages();
     projectSlides.preloadProjects();
-    document.getElementById('tdAbout').addEventListener('click', () => pageTransitions.setPageWithTransition(1));
-    document.getElementById('tdProjects').addEventListener('click', () => pageTransitions.setPageWithTransition(2));
+    document.getElementById('tdAbout').addEventListener('click', () => {
+        pageTransitions.currentPageState = 1;
+        pageTransitions.makeTransition();
+    });
+    document.getElementById('tdProjects').addEventListener('click', () =>  {
+        pageTransitions.currentPageState = 2;
+        pageTransitions.makeTransition();
+    });
     document.getElementById('tdDLResume').addEventListener('click', () => alert('this Feature has not yet been implemented'));
+    
+    preloadImages();
 }
