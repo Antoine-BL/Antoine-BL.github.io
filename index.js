@@ -32,11 +32,11 @@ var events = new function () {
         window.clearTimeout(events.timeoutID);
         events.timeoutID = window.setTimeout(() => events.doneScrolling(events.timeoutID), 200);
 
-        if (pageTransitions.currentPageState <= 0 && events.distTravelled > transitionThreshhold) {
-            events.distTravelled = transitionThreshhold;
+        if (pageTransitions.currentPageState <= 0 && events.distTravelled > transitionThreshhold / 2.135) {
+            events.distTravelled = transitionThreshhold / 2.135;
         } else if (pageTransitions.currentPageState >= pageTransitions.pages.length - 1  && events.distTravelled < -transitionThreshhold) {
             events.distTravelled = -transitionThreshhold;
-        } else if (events.distTravelled > transitionThreshhold && !events.scrolling) {
+        } else if (events.distTravelled > transitionThreshhold / 2.135 && !events.scrolling) {
             events.scrolling = true;
             window.cancelAnimationFrame(events.animationID);
             events.targetDiv.id = 'divOldPage';
@@ -49,7 +49,7 @@ var events = new function () {
                 target.remove();
                 events.transition = false;
                 events.done = true;
-            }, 2000);
+            }, 1000);
             pageTransitions.transitionToNextPage(false);
         } else if (events.distTravelled < -transitionThreshhold && !events.scrolling){
             events.scrolling = true;
@@ -64,7 +64,7 @@ var events = new function () {
                 target.remove();
                 events.transition = false;
                 events.done = true;
-            }, 2000);
+            }, 1000);
             pageTransitions.transitionToNextPage(true);
         }
     }
