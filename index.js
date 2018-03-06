@@ -1,27 +1,75 @@
+var menu;
+var threeDots;
 var events = new function () {
     this.distTravelled = 0;
+    this.currentDY = 0;
+    this.startingTop;
     this.scrolling = false;
     this.timeoutID = null;
+    this.targetDiv = null;
+    this.animationID;
+    this.done = true;
+    this.transition = false;
 
 
     this.scroll = function () {
-        var transitionThreshhold = 300;
+        if (events.transition) {
+            return;
+        }
+        var transitionThreshhold = 1200;
         events.distTravelled += event.deltaY;
+
+        if (!events.scrolling) {
+            events.targetDiv = document.getElementById('divCurrentPage');
+        }
+        
+        if (events.done && !events.transition) {
+            events.startingTop = parseFloat(window.getComputedStyle(events.targetDiv).top.replace('px', ''));
+            events.currentDY = events.startingTop;
+            events.animationID = window.requestAnimationFrame(events.approachPos);
+        }
 
         window.clearTimeout(events.timeoutID);
         events.timeoutID = window.setTimeout(() => events.doneScrolling(events.timeoutID), 200);
 
-        if (events.distTravelled > transitionThreshhold && !events.scrolling) {
+        if (pageTransitions.currentPageState <= 0 && events.distTravelled > transitionThreshhold) {
+            events.distTravelled = transitionThreshhold;
+        } else if (pageTransitions.currentPageState >= pageTransitions.pages.length - 1  && events.distTravelled < -transitionThreshhold) {
+            events.distTravelled = -transitionThreshhold;
+        } else if (events.distTravelled > transitionThreshhold && !events.scrolling) {
             events.scrolling = true;
+            window.cancelAnimationFrame(events.animationID);
+            events.targetDiv.id = 'divOldPage';
+            events.targetDiv.className += ' offScreen-down';
+            var target = events.targetDiv;
+            events.targetDiv = null;
+            events.transition = true;
+            window.setTimeout(() => {
+                events.distTravelled = 0;
+                target.remove();
+                events.transition = false;
+                events.done = true;
+            }, 2000);
             pageTransitions.transitionToNextPage(false);
         } else if (events.distTravelled < -transitionThreshhold && !events.scrolling){
             events.scrolling = true;
+            window.cancelAnimationFrame(events.animationID);
+            events.targetDiv.id = 'divOldPage';
+            events.targetDiv.className += ' offScreen-up';
+            events.transition = true;
+            var target = events.targetDiv;
+            events.targetDiv = null;
+            window.setTimeout(() => {
+                events.distTravelled = 0;
+                target.remove();
+                events.transition = false;
+                events.done = true;
+            }, 2000);
             pageTransitions.transitionToNextPage(true);
         }
     }
 
     this.doneScrolling = function (id) {
-        events.distTravelled = 0;
         events.scrolling = false;
     }
 
@@ -35,6 +83,38 @@ var events = new function () {
 
     this.dragEnd = function () {
 
+    }
+
+    this.recoverPosition = function () {
+        var damping = 0.1;
+        if (events.currentDY.toFixed(0) != 0 && !events.transition) {
+            events.animationID = window.requestAnimationFrame(events.recoverPosition);
+            events.currentDY -= events.currentDY * damping;
+            events.targetDiv.style.top = (events.startingTop + events.currentDY / 10) + 'px';
+        } else {
+            events.done = true;
+            events.targetDiv.style.top = null;
+            window.cancelAnimationFrame(events.animationID);
+            events.animationID = null;
+        }
+    }
+
+    this.approachPos = function () {
+        var damping = 0.1;
+        if (!events.transition) {   
+            events.currentDY += (events.distTravelled - events.currentDY) * damping;
+            events.targetDiv.style.top = (events.startingTop + events.currentDY / 10) + 'px';
+    
+            events.done = false;
+            
+            if (events.currentDY.toFixed(0) == events.distTravelled.toFixed(0)) {
+                cancelAnimationFrame(events.animationID);
+                events.animationID = window.requestAnimationFrame(events.recoverPosition);
+                events.distTravelled = 0;
+            } else {
+                requestAnimationFrame(events.approachPos);
+            }
+        }
     }
 }
 
@@ -69,8 +149,10 @@ var pageTransitions = new function () {
         if (pageTransitions.currentPageState < 0 || pageTransitions.currentPageState >= pageTransitions.pages.length){
             pageTransitions.currentPageState < 0 ? 0 : (pageTransitions.currentPageState >= pageTransitions.pages.length ?
                                                         pageTransitions.pages.length - 1 : pageTransitions.currentPageState);
+            return false;
         } else {
             pageTransitions.makeTransition();
+            return true;
         }
     }
 
@@ -79,8 +161,27 @@ var pageTransitions = new function () {
      * @param {number} pageNum zero-based index of the page to transition to
      */
     this.makeTransition = async function () {
-        document.getElementById('divMainContent').outerHTML = (await pageTransitions.loadedPages[pageTransitions.currentPageState])[0].outerHTML;
-        document.getElementById('divTitle').outerHTML = (await pageTransitions.loadedPages[pageTransitions.currentPageState])[1].outerHTML;
+        var newPage = document.createElement('div');
+        newPage.id = 'divCurrentPage';
+        newPage.className = 'page';
+        document.body.insertBefore(newPage, document.getElementById('bgUnder'));
+
+        var title = (await pageTransitions.loadedPages[pageTransitions.currentPageState])[1];
+        newPage.appendChild(title);
+
+        var newMenu = document.createElement('div');
+        newMenu.id = 'divMenu';
+        newPage.appendChild(newMenu);
+        newMenu.outerHTML = menu;
+
+        var mainContent = (await pageTransitions.loadedPages[pageTransitions.currentPageState])[0];
+        newPage.appendChild(mainContent);
+
+        var newthreeDots = document.createElement('div');
+        newthreeDots.id = 'divThreeDots';
+        newPage.appendChild(newthreeDots);
+        newthreeDots.outerHTML = threeDots;        
+
         pageTransitions.pages[pageTransitions.currentPageState].update();
     }
 
@@ -175,7 +276,6 @@ var projectSlides = new function() {
             document.getElementById('divLeft').innerHTML = '';
         }
         if (projectSlides.currentSlide < projectSlides.slides.length - 1) {
-            console.log('addingRightArrow');
             document.getElementById('divRight').innerHTML = '<img id="imgRight" src="right.png" class="rightArrow">';
             document.getElementById('imgRight').addEventListener('click', () => projectSlides.nextProject(true));
         } else {
@@ -210,6 +310,8 @@ window.onload =  function() {
         pageTransitions.makeTransition();
     });
     document.getElementById('tdDLResume').addEventListener('click', () => alert('this Feature has not yet been implemented'));
-    
+    menu = document.getElementById('divMenu').outerHTML;
+    threeDots = document.getElementById('divThreeDots');
+    threeDots = threeDots.outerHTML.replace(/<span id=\"scrollHint\".*<\/span>/, '');
     preloadImages();
 }
