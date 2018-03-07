@@ -9,9 +9,45 @@
 </head>
 
 <body>
-    <div id="divTitle" class="title">
+    <div id="divCurrentPage" class="page">
+        <div id="divTitle" class="title">
+        </div>
+        <div id="divMenu" class="menus">
+            <table>
+                <tr>
+                    <td id="tdAbout">
+                        <button>About Me</button>
+                    </td>
+                    <td id="tdProjects">
+                        <button>Projects</button>
+                    </td>
+                    <td id="tdDLResume">
+                        <button>Download Resume</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="divMainContent" class="mainContent">
+            <div  class="topSection">
+                <div class="mainParagraph" onscroll="scroll()">
+                        <h1 class="header">Antoine Brassard Lahey</h1>
+                        <h2 class="tagLine">Software Developer.</h2>
+                </div>
+            </div>  
+            <div class="bottomSection">
+                
+            </div>
+        </div>
+        <div id="divThreeDots" class="threeDots">
+            <span id="scrollHint">(Scroll or drag up for next page)</span><br/>
+            <img class="size" src="threeDots.png" />
+        </div>
     </div>
-    <div class="menus">
+    
+    <div id="bgUnder" class="about-BG under">
+        
+    </div>
+    <div id="menuUnder" class="menus menu-under under">
         <table>
             <tr>
                 <td id="tdAbout">
@@ -26,19 +62,7 @@
             </tr>
         </table>
     </div>
-    <div id="divMainContent" class="mainContent">
-        <div  class="topSection">
-            <div class="mainParagraph" onscroll="scroll()">
-                    <h1 class="header">Antoine Brassard Lahey</h1>
-                    <h2 class="tagLine">Software Developer.</h2>
-            </div>
-        </div>  
-        <div class="bottomSection">
-            
-        </div>
-    </div>
-    <div class="threeDots">
-        <span id="scrollHint">(Scroll or drag up for next page)</span><br/>
+    <div id="threeDotsUnder" class="threeDots under">
         <img class="size" src="threeDots.png" />
     </div>
 </body>

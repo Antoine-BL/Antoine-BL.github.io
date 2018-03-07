@@ -30,6 +30,7 @@ H2 {
     top: 2vh;
     right: 0;
     left: 0;
+    z-index: inherit;
 }
 
 .mainParagraph {
@@ -44,16 +45,19 @@ H2 {
     height: 200px;
     padding: 20px;
     text-align: left;
+    z-index: inherit;
 }
 
 .description {
     font-size: 12pt;
-    text-align: justify
+    text-align: justify;
+    z-index: inherit;
 }
 
 .mainParagraph p {
     margin-top: 8px;
     margin-bottom: 0px;
+    z-index: inherit;
 }
 
 .topSection {
@@ -63,6 +67,7 @@ H2 {
     background-color: #202020;
     width: 100%;
     height: 80vh;
+    z-index: inherit;
 }
 
 .bottomSection {
@@ -73,6 +78,7 @@ H2 {
 
     color: #202020;
     background-color: #FFFFDD;
+    z-index: inherit;
 }
 
 .threeDots {
@@ -86,12 +92,14 @@ H2 {
 
     text-align: center;
 
-    font-size: 9pt;
+    font-size: 2vh;
+    z-index: inherit;
 }
 
 .size {
-    width: 31px;
-    height: 9px;
+    width: auto;
+    height: 1vh;
+    z-index: inherit;
 }
 
 .menus{
@@ -102,16 +110,24 @@ H2 {
     text-align: right;
     font-weight: 200;
     padding: 2vh;
+    z-index: inherit;
+}
+
+.menu-under {
+    position: absolute;
+    width:100%;
 }
 
 .menus table{
     margin-left: auto;
+    z-index: inherit;
 }
 
 .menus tr td{
     padding-right: 2vw;
     text-align: center;
     vertical-align: middle;
+    z-index: inherit;
 }
 
 
@@ -126,6 +142,7 @@ H2 {
     font-size: 1vmax;
     font-family: "Roboto";
     font-weight: bolder;
+    z-index: inherit;
 }
 
 .about-BG {
@@ -134,9 +151,10 @@ H2 {
     height: 100%;
     background-color: #FFFFDD;
     color: #202020;
+    z-index: inherit;
 }
 
-.about-mainPar {
+.about {
     padding: 0px !important;
     position: absolute;
     margin: auto;
@@ -148,17 +166,24 @@ H2 {
     width: 75vw;
     height: 80vh;
     padding: 20px;
-    text-align: center;
+    z-index: inherit;
 }
 
-.about-image{
+.about p {
+    text-align: center;
+    z-index: inherit;
+}
+
+.about p img{
     width: 25vmin;
     height: auto;
     border-radius: 50%;
     border: 5px solid #202020;
+    z-index: inherit;
 }
 
-.about-tagLine{
+.about h3{
+    text-align: center;
     margin: auto;
     display: block;
     border-top: 2px double #202020;
@@ -166,17 +191,20 @@ H2 {
     width: 100%;
 
     font-size: 6vmin;
+    z-index: inherit;
 }
 
-.content {
+.about div p {
     text-align: justify;
     font-size: 2.5vmin;
+    z-index: inherit;
 }
 
 .projects {
     background-color: #FFFFDD;
     height: 100%;
     width: 100%;
+    z-index: inherit;
 }
 
 .slide {
@@ -192,12 +220,9 @@ H2 {
     width: 75%;
     background-color: #202020;
     border-radius: 5px;
+    z-index: inherit;
 }
 
-.slide > div {
-    height: 30vh;
-    overflow: hidden;
-}
 
 .slide H1 {
     text-align: center;
@@ -205,6 +230,7 @@ H2 {
     font-weight: 300;
     margin: 3vmin;
     height: 7.5vmin;
+    z-index: inherit;
 }
 
 .slide H2 {
@@ -214,32 +240,41 @@ H2 {
     text-align: center;
     font-weight: 200;
     margin: 3vmin;
+    z-index: inherit;
 }
 
-.slide div {
+.slide div div {
+    overflow: hidden;
     height: 35vmin;
     margin-bottom: 2vh;
+    z-index: inherit;
 }
 
 .slide div P {
-    font-size: 2.5vmin;
+    font-size: 2.25vmin;
+    margin-top: 0px;
+    margin-bottom: 30px;
     margin-right: 10vmin;
     margin-left: 10vmin;
     text-align: justify;
+    z-index: inherit;
 }
 
 .buttons {
     text-align: center;
+    z-index: inherit;
 }
 
 .buttons table {
     display: inline;
+    z-index: inherit;
 }
 
 
 .buttons table tr td {
     width: 50%;
     align-content: center;
+    z-index: inherit;
 }
 
 .buttons button,
@@ -256,6 +291,7 @@ H2 {
     font-family: "Roboto";
     font-size: 2.25vmin;
     font-weight: bolder;
+    z-index: inherit;
 }
 
 
@@ -268,6 +304,7 @@ H2 {
     top: 0;
     bottom: 0;
     right: 10px;
+    z-index: inherit;
 }
 
 .leftArrow {
@@ -279,4 +316,28 @@ H2 {
     top: 0;
     left: 10px;
     bottom: 0;
+    z-index: inherit;
 }
+
+.under {
+    z-index: -1;
+}
+
+.page{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.offScreen-up{
+    transition: top 1s !important;
+    top: -125% !important;
+    z-index: 99;
+}
+
+.offScreen-down{
+    z-index: 99;
+    transition: top 1s !important;
+    top: 100% !important;
+}
+
