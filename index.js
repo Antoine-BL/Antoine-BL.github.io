@@ -2,6 +2,7 @@ var menu;
 var threeDots;
 var events = new function () {
     this.distTravelled = 0;
+    this.startingY = 0;
     this.currentDY = 0;
     this.startingTop;
     this.scrolling = false;
@@ -10,6 +11,7 @@ var events = new function () {
     this.animationID;
     this.done = true;
     this.transition = false;
+    this.mouseDown = false;
 
 
     this.scroll = function () {
@@ -37,36 +39,29 @@ var events = new function () {
         } else if (pageTransitions.currentPageState >= pageTransitions.pages.length - 1  && events.distTravelled < -transitionThreshhold) {
             events.distTravelled = -transitionThreshhold;
         } else if (events.distTravelled > transitionThreshhold / 2.135 && !events.scrolling) {
-            events.scrolling = true;
-            window.cancelAnimationFrame(events.animationID);
-            events.targetDiv.id = 'divOldPage';
+            events.readyTransition();
             events.targetDiv.className += ' offScreen-down';
-            var target = events.targetDiv;
-            events.targetDiv = null;
-            events.transition = true;
-            window.setTimeout(() => {
-                events.distTravelled = 0;
-                target.remove();
-                events.transition = false;
-                events.done = true;
-            }, 1000);
             pageTransitions.transitionToNextPage(false);
         } else if (events.distTravelled < -transitionThreshhold && !events.scrolling){
-            events.scrolling = true;
-            window.cancelAnimationFrame(events.animationID);
-            events.targetDiv.id = 'divOldPage';
+            events.readyTransition();
             events.targetDiv.className += ' offScreen-up';
-            events.transition = true;
-            var target = events.targetDiv;
-            events.targetDiv = null;
-            window.setTimeout(() => {
-                events.distTravelled = 0;
-                target.remove();
-                events.transition = false;
-                events.done = true;
-            }, 1000);
             pageTransitions.transitionToNextPage(true);
         }
+    }
+
+    this.readyTransition = function (){
+        events.scrolling = true;
+        window.cancelAnimationFrame(events.animationID);
+        events.targetDiv.id = 'divOldPage';
+        events.transition = true;
+        var target = events.targetDiv;
+        window.setTimeout(() => {
+            events.distTravelled = 0;
+            target.remove();
+            events.targetDiv = null;
+            events.transition = false;
+            events.done = true;
+        }, 1000);
     }
 
     this.doneScrolling = function (id) {
@@ -74,15 +69,47 @@ var events = new function () {
     }
 
     this.dragStart = function () {
-    
+        events.mouseDown = true;
+        events.targetDiv = document.getElementById('divCurrentPage');        
+        events.startingTop = parseFloat(window.getComputedStyle(events.targetDiv).top.replace('px', ''));
+        events.currentDY = events.startingTop;
+        events.startingY = event.clientY;
+        events.distTravelled = 0;
+        console.log('distTravelled: ' + events.distTravelled);
+        events.animationID = window.requestAnimationFrame(events.approachPos);
     }
 
     this.dragMove = function () {
+        console.log('move')
+        if (events.transition || !events.mouseDown) {
+            return;
+        }
+        var transitionThreshhold = 1200;
+        events.currentDY =  event.clientY - events.startingY;
+        events.distTravelled = events.currentDY * 10;
 
+        if (pageTransitions.currentPageState <= 0 && events.distTravelled > transitionThreshhold / 2.135) {
+            events.distTravelled = transitionThreshhold / 2.135;
+        } else if (pageTransitions.currentPageState >= pageTransitions.pages.length - 1  && events.distTravelled < -transitionThreshhold) {
+            events.distTravelled = -transitionThreshhold;
+        } else if (events.distTravelled > transitionThreshhold / 2.135) {
+            events.readyTransition();
+            events.targetDiv.className += ' offScreen-down';
+            pageTransitions.transitionToNextPage(false);
+        } else if (events.distTravelled < -transitionThreshhold){
+            events.readyTransition();
+            events.targetDiv.className += ' offScreen-up';
+            pageTransitions.transitionToNextPage(true);
+        }
     }
 
     this.dragEnd = function () {
-
+        events.mouseDown = false;
+        events.currentDY = 0;
+        events.distTravelled = 0;
+        events.startingTop = 0;
+        events.recoverPosition();
+        window.cancelAnimationFrame(events.animationID);
     }
 
     this.recoverPosition = function () {
@@ -101,13 +128,15 @@ var events = new function () {
 
     this.approachPos = function () {
         var damping = 0.1;
+        console.log(events.currentDY);
+        console.log(events.distTravelled);
         if (!events.transition) {   
             events.currentDY += (events.distTravelled - events.currentDY) * damping;
             events.targetDiv.style.top = (events.startingTop + events.currentDY / 10) + 'px';
     
             events.done = false;
             
-            if (events.currentDY.toFixed(0) == events.distTravelled.toFixed(0)) {
+            if (events.currentDY.toFixed(0) == events.distTravelled.toFixed(0) && !events.mouseDown) {
                 cancelAnimationFrame(events.animationID);
                 events.animationID = window.requestAnimationFrame(events.recoverPosition);
                 events.distTravelled = 0;
@@ -299,6 +328,9 @@ async function preloadImages() {
 window.onload =  function() {
     alert('Warning: this website has not yet been completed.\n\n All text and functionality is subject to change and should, in no way, be considered final.');
     window.addEventListener('wheel', events.scroll);
+    window.addEventListener('mousedown', events.dragStart);
+    window.addEventListener('mousemove', events.dragMove);
+    window.addEventListener('mouseup', events.dragEnd);    
     pageTransitions.preloadPages();
     projectSlides.preloadProjects();
     document.getElementById('tdAbout').addEventListener('click', () => {
