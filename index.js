@@ -74,6 +74,9 @@ var events = new function () {
         if (events.transition) {
             return;
         }
+        if (event.type == 'touchstart') {
+            event.clientY = event.touches[0].clientY;
+        }
 
         events.mouseDown = true;
         events.targetDiv = document.getElementById('divCurrentPage');        
@@ -87,6 +90,9 @@ var events = new function () {
     this.dragMove = function () {
         if (!events.mouseDown || events.transition) {
             return;
+        }
+        if (event.type == 'touchmove') {
+            event.clientY = event.touches[0].clientY;
         }
 
         var transitionThreshhold = 1200;
@@ -338,7 +344,10 @@ window.onload =  function() {
     window.addEventListener('wheel', events.scroll);
     window.addEventListener('mousedown', events.dragStart);
     window.addEventListener('mousemove', events.dragMove);
-    window.addEventListener('mouseup', events.dragEnd);    
+    window.addEventListener('mouseup', events.dragEnd);
+    window.addEventListener('touchstart', events.dragStart);
+    window.addEventListener('touchmove', events.dragMove);
+    window.addEventListener('touchend', events.dragEnd);   
     pageTransitions.preloadPages();
     projectSlides.preloadProjects();
     bindMenuEvents();
