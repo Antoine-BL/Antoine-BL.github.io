@@ -53,6 +53,7 @@ var events = new function () {
         events.scrolling = true;
         window.cancelAnimationFrame(events.animationID);
         events.targetDiv.id = 'divOldPage';
+        console.log('lol wtf');
         events.transition = true;
         var target = events.targetDiv;
         window.setTimeout(() => {
@@ -340,15 +341,7 @@ window.onload =  function() {
     window.addEventListener('mouseup', events.dragEnd);    
     pageTransitions.preloadPages();
     projectSlides.preloadProjects();
-    document.getElementById('tdAbout').addEventListener('click', () => {
-        pageTransitions.currentPageState = 1;
-        pageTransitions.makeTransition();
-    });
-    document.getElementById('tdProjects').addEventListener('click', () =>  {
-        pageTransitions.currentPageState = 2;
-        pageTransitions.makeTransition();
-    });
-    document.getElementById('tdDLResume').addEventListener('click', () => alert('this Feature has not yet been implemented'));
+    bindMenuEvents();
     menu = document.getElementById('divMenu').outerHTML;
     threeDots = document.getElementById('divThreeDots');
     threeDots = threeDots.outerHTML.replace(/<span id=\"scrollHint\".*<\/span>/, '');
@@ -371,26 +364,31 @@ function bindMenuEvents () {
     document.getElementById('tdAbout').onclick = () => {
         var cssClass;
         if (pageTransitions.currentPageState < (pageTransitions.currentPageState == 1 ? 0 : 1)) {
-            cssClass = 'offScreen-down';
+            cssClass = ' offScreen-up';
         } else {
-            cssClass = 'offScreen-up';
+            cssClass = ' offScreen-down';
         }
         pageTransitions.currentPageState = pageTransitions.currentPageState == 1 ? 0 : 1;
 
+        events.targetDiv = document.getElementById('divCurrentPage');
+
         events.readyTransition();
+        events.targetDiv.className += cssClass;
         pageTransitions.makeTransition();
     };
     document.getElementById('tdProjects').onclick = () => {
         var cssClass;
         if (pageTransitions.currentPageState < (pageTransitions.currentPageState == 2 ? 0 : 2)) {
-            cssClass = 'offScreen-down';
+            cssClass = ' offScreen-up';
         } else {
-            cssClass = 'offScreen-up';
+            cssClass = ' offScreen-down';
         }
         pageTransitions.currentPageState = pageTransitions.currentPageState == 2 ? 0 : 2;
         
+        events.targetDiv = document.getElementById('divCurrentPage');
 
         events.readyTransition();
+        events.targetDiv.className += cssClass;
         pageTransitions.makeTransition();   
     };
     document.getElementById('tdDLResume').onclick = () => alert('this Feature has not yet been implemented');
