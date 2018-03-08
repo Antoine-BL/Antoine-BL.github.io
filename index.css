@@ -225,16 +225,18 @@ H2 {
 
 
 .slide H1 {
+    height: auto;
+    max-height: 15vmin;
     text-align: center;
     font-size: 7.5vmin;
     font-weight: 300;
     margin: 3vmin;
-    height: 7.5vmin;
     z-index: inherit;
 }
 
 .slide H2 {
-    height: 5vmin;
+    height: auto;
+    max-height: 15vmin;
     font-size: 4vmin;
     overflow: hidden;
     text-align: center;
@@ -245,7 +247,8 @@ H2 {
 
 .slide div div {
     overflow: hidden;
-    height: 35vmin;
+    height: 100%;
+    max-height: 35vmin;
     margin-bottom: 2vh;
     z-index: inherit;
 }

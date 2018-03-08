@@ -53,7 +53,6 @@ var events = new function () {
         events.scrolling = true;
         window.cancelAnimationFrame(events.animationID);
         events.targetDiv.id = 'divOldPage';
-        console.log('lol wtf');
         events.transition = true;
         var target = events.targetDiv;
         window.setTimeout(() => {
