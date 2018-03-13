@@ -61,6 +61,7 @@ var events = new function () {
             events.targetDiv = null;
             events.transition = false;
             events.done = true;
+            bindMenuEvents();
         }, 1000);
     }
 
@@ -69,21 +70,30 @@ var events = new function () {
     }
 
     this.dragStart = function () {
+        if (events.transition) {
+            return;
+        }
+        if (event.type == 'touchstart') {
+            event.clientY = event.touches[0].clientY;
+        }
+
         events.mouseDown = true;
         events.targetDiv = document.getElementById('divCurrentPage');        
         events.startingTop = parseFloat(window.getComputedStyle(events.targetDiv).top.replace('px', ''));
         events.currentDY = events.startingTop;
         events.startingY = event.clientY;
         events.distTravelled = 0;
-        console.log('distTravelled: ' + events.distTravelled);
         events.animationID = window.requestAnimationFrame(events.approachPos);
     }
 
     this.dragMove = function () {
-        console.log('move')
-        if (events.transition || !events.mouseDown) {
+        if (!events.mouseDown || events.transition) {
             return;
         }
+        if (event.type == 'touchmove') {
+            event.clientY = event.touches[0].clientY;
+        }
+
         var transitionThreshhold = 1200;
         events.currentDY =  event.clientY - events.startingY;
         events.distTravelled = events.currentDY * 10;
@@ -104,6 +114,9 @@ var events = new function () {
     }
 
     this.dragEnd = function () {
+        if (!events.mouseDown) {
+            return;
+        }
         events.mouseDown = false;
         events.currentDY = 0;
         events.distTravelled = 0;
@@ -128,8 +141,6 @@ var events = new function () {
 
     this.approachPos = function () {
         var damping = 0.1;
-        console.log(events.currentDY);
-        console.log(events.distTravelled);
         if (!events.transition) {   
             events.currentDY += (events.distTravelled - events.currentDY) * damping;
             events.targetDiv.style.top = (events.startingTop + events.currentDY / 10) + 'px';
@@ -220,7 +231,7 @@ var pageTransitions = new function () {
     this.preloadPages = function() {
         for (var i = 0; i < pageTransitions.pages.length; i++) {
             pageTransitions.loadedPages[i] = pageTransitions.getPage(pageTransitions.pages[i].url, ['divMainContent', 'divTitle'])
-            .then(function OK(response) {return response})
+            .then(function OK(response) { return response })
             .catch(function ERR(err) { console.error(err); });
         }
     }
@@ -310,6 +321,8 @@ var projectSlides = new function() {
         } else {
             document.getElementById('divRight').innerHTML = '';
         }
+
+
     }
 }
 
@@ -326,24 +339,63 @@ async function preloadImages() {
  * Binds events to listeners
  */
 window.onload =  function() {
-    alert('Warning: this website has not yet been completed.\n\n All text and functionality is subject to change and should, in no way, be considered final.');
     window.addEventListener('wheel', events.scroll);
     window.addEventListener('mousedown', events.dragStart);
     window.addEventListener('mousemove', events.dragMove);
-    window.addEventListener('mouseup', events.dragEnd);    
+    window.addEventListener('mouseup', events.dragEnd);
+    window.addEventListener('touchstart', events.dragStart);
+    window.addEventListener('touchmove', events.dragMove);
+    window.addEventListener('touchend', events.dragEnd);   
     pageTransitions.preloadPages();
     projectSlides.preloadProjects();
-    document.getElementById('tdAbout').addEventListener('click', () => {
-        pageTransitions.currentPageState = 1;
-        pageTransitions.makeTransition();
-    });
-    document.getElementById('tdProjects').addEventListener('click', () =>  {
-        pageTransitions.currentPageState = 2;
-        pageTransitions.makeTransition();
-    });
-    document.getElementById('tdDLResume').addEventListener('click', () => alert('this Feature has not yet been implemented'));
+    bindMenuEvents();
     menu = document.getElementById('divMenu').outerHTML;
     threeDots = document.getElementById('divThreeDots');
     threeDots = threeDots.outerHTML.replace(/<span id=\"scrollHint\".*<\/span>/, '');
     preloadImages();
+}
+
+function bindMenuEvents () {
+    if (pageTransitions.currentPageState == 1) {
+        document.getElementById('tdAbout').innerHTML = '<button>Frontpage</button>'
+    } else {
+        document.getElementById('tdAbout').innerHTML = '<button>About Me</button>'
+    }
+
+    if (pageTransitions.currentPageState == 2) {
+        document.getElementById('tdProjects').innerHTML = '<button>Frontpage</button>'
+    } else {
+        document.getElementById('tdProjects').innerHTML = '<button>Projects</button>'
+    }
+
+    document.getElementById('tdAbout').onclick = () => {
+        var cssClass;
+        if (pageTransitions.currentPageState < (pageTransitions.currentPageState == 1 ? 0 : 1)) {
+            cssClass = ' offScreen-up';
+        } else {
+            cssClass = ' offScreen-down';
+        }
+        pageTransitions.currentPageState = pageTransitions.currentPageState == 1 ? 0 : 1;
+
+        events.targetDiv = document.getElementById('divCurrentPage');
+
+        events.readyTransition();
+        events.targetDiv.className += cssClass;
+        pageTransitions.makeTransition();
+    };
+    document.getElementById('tdProjects').onclick = () => {
+        var cssClass;
+        if (pageTransitions.currentPageState < (pageTransitions.currentPageState == 2 ? 0 : 2)) {
+            cssClass = ' offScreen-up';
+        } else {
+            cssClass = ' offScreen-down';
+        }
+        pageTransitions.currentPageState = pageTransitions.currentPageState == 2 ? 0 : 2;
+        
+        events.targetDiv = document.getElementById('divCurrentPage');
+
+        events.readyTransition();
+        events.targetDiv.className += cssClass;
+        pageTransitions.makeTransition();   
+    };
 }
