@@ -231,7 +231,7 @@ var pageTransitions = new function () {
     this.preloadPages = function() {
         for (var i = 0; i < pageTransitions.pages.length; i++) {
             pageTransitions.loadedPages[i] = pageTransitions.getPage(pageTransitions.pages[i].url, ['divMainContent', 'divTitle'])
-            .then(function OK(response) {return response})
+            .then(function OK(response) { return response })
             .catch(function ERR(err) { console.error(err); });
         }
     }
@@ -339,7 +339,6 @@ async function preloadImages() {
  * Binds events to listeners
  */
 window.onload =  function() {
-    alert('Warning: this website has not yet been completed.\n\n All text and functionality is subject to change and should, in no way, be considered final.');
     window.addEventListener('wheel', events.scroll);
     window.addEventListener('mousedown', events.dragStart);
     window.addEventListener('mousemove', events.dragMove);
@@ -399,5 +398,4 @@ function bindMenuEvents () {
         events.targetDiv.className += cssClass;
         pageTransitions.makeTransition();   
     };
-    document.getElementById('tdDLResume').onclick = () => alert('this Feature has not yet been implemented');
 }
